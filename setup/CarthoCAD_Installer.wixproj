@@ -1,0 +1,40 @@
+<Project Sdk="WixToolset.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Package</OutputType>
+    <OutputName>CarthoCAD_Installer</OutputName>
+    <Version Condition="'$(Version)'==''">0.4.40</Version>
+    <DefineConstants>
+      SourceDir=$(MSBuildProjectDirectory)\CarthoCAD.bundle;
+      Version=$(Version)
+    </DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="5.*-*" />
+  </ItemGroup>
+
+  <!-- Harvest the CarthoCAD.bundle directory structure automatically -->
+  <Target Name="HarvestBundle" BeforeTargets="BeforeBuild">
+    <HeatDirectory
+      Directory="$(MSBuildProjectDirectory)\CarthoCAD.bundle"
+      OutputFile="$(MSBuildProjectDirectory)\Harvested.wxs"
+      ComponentGroupName="CarthoCADComponents"
+      DirectoryRefId="INSTALLFOLDER"
+      AutogenerateGuids="true"
+      SuppressCom="true"
+      SuppressRegistry="true"
+      SuppressRootDirectory="true"
+      PreprocessorVariable="var.SourceDir"
+      GenerateGuidsNow="true"
+      ToolPath="$(WixToolPath)" />
+  </Target>
+
+  <!-- Remove harvested file on clean -->
+  <Target Name="CleanHarvested" AfterTargets="CoreClean">
+    <Delete Files="$(MSBuildProjectDirectory)\Harvested.wxs"
+            Condition="Exists('$(MSBuildProjectDirectory)\Harvested.wxs')" />
+  </Target>
+
+</Project>

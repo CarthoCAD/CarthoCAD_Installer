@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package
+    Name="CarthoCAD"
+    Manufacturer="Gdiael Barros"
+    Version="$(var.Version)"
+    UpgradeCode="ADFA9DC2-D5E1-4B1F-84CC-A3AC9393C2E5"
+    Scope="perUser">
+
+    <SummaryInformation
+      Description="CarthoCAD, Plugin para AutoCAD"
+      Manufacturer="Gdiael Barros" />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="AppDataFolder">
+      <Directory Id="AutodeskFolder" Name="Autodesk">
+        <Directory Id="ApplicationPluginsFolder" Name="ApplicationPlugins">
+          <Directory Id="INSTALLFOLDER" Name="CarthoCAD.bundle" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="CarthoCAD" Level="1" AllowAdvertise="no">
+      <ComponentGroupRef Id="CarthoCADComponents" />
+    </Feature>
+
+  </Package>
+
+</Wix>

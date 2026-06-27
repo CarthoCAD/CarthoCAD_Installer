@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ApplicationPackage
+  SchemaVersion = "1.0"
+  AppVersion = "0.4.40"
+  Author = "Gdiael S. Barros"
+  ProductCode = "591983A0-4B78-4828-B408-F7E2D5F18C2A"
+  UpgradeCode = "ADFA9DC2-D5E1-4B1F-84CC-A3AC9393C2E5"
+  Name = "CarthoCAD, plugin para AutoCAD"
+  Icon = "./Contents/Recursos/CarthoCAD.ico"
+  HelpFile = "./Contents/Help/CarthocadHelp.pdf"
+  >
+  <CompanyDetails
+    Name = "Gdiael S. Barros"
+    Email = "carthocad@gmail.com"
+    />
+  <Components>
+    <RuntimeRequirements
+      OS = "Win32|Win64"
+      SupportPath = "./Contents"
+      ToolPalettePath = "./Contents/Palettes"
+      SeriesMin="R19.0"
+      SeriesMax="R25.1"
+      />
+    <ComponentEntry
+      AppName="CarthoCAD Fas"
+      AppDescription="Plugin para AutoCAD em lisp"
+      ModuleName="./Contents/CARTHOCAD.FAS"
+      />
+    <ComponentEntry
+      AppName="CarthoCAD B"
+      AppDescription="Assembly .net para AutoCAD"
+      ModuleName="./Contents/CarthoCAD 23.dll"
+      />
+    <ComponentEntry
+      AppName="CarthoCADLSP"
+      AppDescription="Plugin para AutoCAD em lisp"
+      ModuleName="./Contents/CARTHOCAD.LSP"
+      />
+    <ComponentEntry
+      AppName="CarthoCAD Menu"
+      AppDescription="Arquivo de costumização"
+      ModuleName="./Contents/CarthoCAD.cuix"
+      />
+  </Components>
+</ApplicationPackage>
