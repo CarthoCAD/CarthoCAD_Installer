@@ -14,6 +14,10 @@
 
     <MediaTemplate EmbedCab="yes" />
 
+    <!-- Suprime warnings de ICE para instalação per-user -->
+    <Property Id="MSIINSTALLPERUSER" Value="1" />
+    <Property Id="ALLUSERS" Value="2" />
+
     <StandardDirectory Id="AppDataFolder">
       <Directory Id="AutodeskFolder" Name="Autodesk">
         <Directory Id="ApplicationPluginsFolder" Name="ApplicationPlugins">

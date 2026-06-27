@@ -6,7 +6,7 @@
     <OutputName>CarthoCAD_Installer</OutputName>
     <Version Condition="'$(Version)'==''">0.4.40</Version>
     <EnableProjectHarvesting>true</EnableProjectHarvesting>
-    <SuppressIces>ICE38;ICE64</SuppressIces>
+    <SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
   </PropertyGroup>
 
   <PropertyGroup>
