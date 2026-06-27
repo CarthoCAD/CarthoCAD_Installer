@@ -112,8 +112,13 @@ jobs:
           robocopy "$releaseDir" "$contentsDir" /E /NFL /NDL /NJH /NJS `
             /XF "*.pdb" "*.zip" "acad.err" "GmapsV4_Temp.html" "TEMP01.html"
           if ($LASTEXITCODE -ge 8) { exit $LASTEXITCODE }
+          exit 0
 
+      - name: Log contents after copy
+        shell: pwsh
+        run: |
           Write-Output "Build outputs copied to bundle Contents"
+          Get-ChildItem "$env:BUNDLE_SRC/Contents" -Recurse | Select-Object FullName
 
       # ── 9. Update PackageContents.xml version ──────────────────────
       - name: Update AppVersion in PackageContents.xml
