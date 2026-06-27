@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
   <Package
     Name="CarthoCAD"
@@ -18,6 +18,10 @@
     <Property Id="MSIINSTALLPERUSER" Value="1" />
     <Property Id="ALLUSERS" Value="2" />
 
+    <!-- Ícone no Add/Remove Programs -->
+    <Icon Id="CarthoCADIcon" SourceFile="$(var.SourceDir)\Contents\Recursos\Carthocad.ico" />
+    <Property Id="ARPPRODUCTICON" Value="CarthoCADIcon" />
+
     <StandardDirectory Id="AppDataFolder">
       <Directory Id="AutodeskFolder" Name="Autodesk">
         <Directory Id="ApplicationPluginsFolder" Name="ApplicationPlugins">
@@ -25,6 +29,10 @@
         </Directory>
       </Directory>
     </StandardDirectory>
+
+    <ui:WixUI Id="WixUI_Minimal" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="CarthoCAD.bundle\Contents\Recursos\Licença Carthocad.rtf" />
 
     <Feature Id="MainFeature" Title="CarthoCAD" Level="1" AllowAdvertise="no">
       <ComponentGroupRef Id="CarthoCADComponents" />

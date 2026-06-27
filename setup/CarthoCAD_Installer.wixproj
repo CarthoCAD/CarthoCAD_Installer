@@ -18,6 +18,7 @@
     <PackageReference Include="WixToolset.Heat" Version="5.0.2">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </PackageReference>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
