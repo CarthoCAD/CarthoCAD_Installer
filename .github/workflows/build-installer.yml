@@ -129,29 +129,11 @@ jobs:
           $xml.Save((Resolve-Path "$env:BUNDLE_SRC/PackageContents.xml").Path)
 
       # ── 10. Install WiX Toolset ─────────────────────────────────────
-      - name: Install WiX Toolset v5
+      - name: Install WiX workload
         shell: pwsh
-        run: |
-          dotnet tool install --global wix --version 5.*
-          $wixPath = "$env:USERPROFILE\.dotnet\tools"
-          echo "$wixPath" >> $env:GITHUB_PATH
+        run: dotnet workload install wix
 
-      # ── 11. Heat harvest bundle ────────────────────────────────────
-      - name: Heat Harvest CarthoCAD.bundle
-        shell: pwsh
-        run: |
-          wix heat dir "$env:BUNDLE_SRC" `
-            -out "$env:HARVESTED" `
-            -cg CarthoCADComponents `
-            -dr INSTALLFOLDER `
-            -var var.SourceDir `
-            -ag `
-            -scom `
-            -sreg `
-            -srd `
-            -nologo
-
-      # ── 12. Build MSI ──────────────────────────────────────────────
+      # ── 11. Build MSI (harvest + compile + link) ───────────────────
       - name: Build MSI
         id: build
         shell: pwsh
@@ -159,21 +141,18 @@ jobs:
           $version = '${{ steps.version.outputs.VERSION }}'
           $msiName = "CarthoCAD v$version.msi"
 
-          wix build "$env:WXS_MAIN" "$env:HARVESTED" `
-            -o "$msiName" `
-            -d:SourceDir="$env:BUNDLE_SRC" `
-            -d:Version="$version" `
-            -nologo `
-            -v
+          dotnet build setup/CarthoCAD_Installer.wixproj `
+            -p:Version=$version `
+            -p:OutputName="CarthoCAD v$version"
 
-          if (-not (Test-Path "$msiName")) {
+          if (-not (Test-Path "setup/$msiName")) {
             Write-Error "MSI was not created"
             exit 1
           }
-          Write-Output "MSI created: $msiName"
+          Write-Output "MSI created: setup/$msiName"
           "MSI_NAME=$msiName" >> $env:GITHUB_OUTPUT
 
-      # ── 13. Create GitHub Release ──────────────────────────────────
+      # ── 12. Create GitHub Release ──────────────────────────────────
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <!-- Harvest the CarthoCAD.bundle directory structure automatically -->
-  <Target Name="HarvestBundle" BeforeTargets="BeforeBuild">
+  <Target Name="HarvestBundle" BeforeTargets="Compile">
     <HeatDirectory
       Directory="$(MSBuildProjectDirectory)\CarthoCAD.bundle"
       OutputFile="$(MSBuildProjectDirectory)\Harvested.wxs"
@@ -27,8 +27,7 @@
       SuppressRegistry="true"
       SuppressRootDirectory="true"
       PreprocessorVariable="var.SourceDir"
-      GenerateGuidsNow="true"
-      ToolPath="$(WixToolPath)" />
+      GenerateGuidsNow="true" />
   </Target>
 
   <!-- Remove harvested file on clean -->
