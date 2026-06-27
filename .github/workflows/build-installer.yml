@@ -159,10 +159,8 @@ jobs:
           name: CarthoCAD ${{ steps.version.outputs.TAG }}
           body: |
             ## CarthoCAD ${{ steps.version.outputs.TAG }}
-
-            **${{ steps.build.outputs.MSI_NAME }}**
-
-            Instalador WiX para AutoCAD. Instala em `%APPDATA%\Autodesk\ApplicationPlugins\CarthoCAD.bundle`.
+            **Plugin para AutoCAD**
+            Baixe o instalador e execute na sua máquina.
           files: ${{ steps.build.outputs.MSI_PATH }}
           draft: false
           prerelease: false
