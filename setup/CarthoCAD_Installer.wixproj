@@ -5,14 +5,26 @@
     <OutputType>Package</OutputType>
     <OutputName>CarthoCAD_Installer</OutputName>
     <Version Condition="'$(Version)'==''">0.4.40</Version>
-    <DefineConstants>SourceDir=$(MSBuildProjectDirectory)\CarthoCAD.bundle;Version=$(Version)</DefineConstants>
+    <EnableProjectHarvesting>true</EnableProjectHarvesting>
+    <SuppressIces>ICE38;ICE64</SuppressIces>
   </PropertyGroup>
 
-  <!-- Harvest automático via WiX 5 (substitui HeatDirectory) -->
+  <PropertyGroup>
+    <DefineConstants>SourceDir=$(MSBuildProjectDirectory)\CarthoCAD.bundle</DefineConstants>
+    <DefineConstants Condition="'$(Version)'!=''">$(DefineConstants);Version=$(Version)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="5.0.2">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <HarvestDirectory Include="$(MSBuildProjectDirectory)\CarthoCAD.bundle">
       <ComponentGroupName>CarthoCADComponents</ComponentGroupName>
       <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+      <PreprocessorVariable>var.SourceDir</PreprocessorVariable>
       <SuppressCom>true</SuppressCom>
       <SuppressRegistry>true</SuppressRegistry>
       <SuppressRootDirectory>true</SuppressRootDirectory>
