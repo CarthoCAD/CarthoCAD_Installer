@@ -72,14 +72,11 @@ jobs:
           Write-Output "Assembly version set to $assemblyVer"
 
       # ── 6. Restore NuGet packages for CarthoCAD_23 ─────────────────
-      #     packages.config places packages in ..\packages\ relative to
-      #     the .vbproj, so we restore to a sibling "packages" folder.
       - name: Restore NuGet packages (CarthoCAD_23)
         shell: pwsh
         run: |
           $nuget = (Get-Command nuget.exe -ErrorAction SilentlyContinue).Source
           if (-not $nuget) {
-            # Download nuget.exe if not on PATH
             Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile .\nuget.exe
             $nuget = '.\nuget.exe'
           }
@@ -101,14 +98,12 @@ jobs:
           }
 
       # ── 8. Copy build outputs into bundle Contents ──────────────────
-      #     Includes: CarthoCAD 23.dll, WebView2 DLLs + runtimes/
       - name: Copy CarthoCAD_23 output to bundle
         shell: pwsh
         run: |
           $releaseDir = "CarthoCAD_23/bin/Release"
           $contentsDir = "$env:BUNDLE_SRC/Contents"
 
-          # Copy all build outputs (DLL, XML, PDB, runtimes, WebView2)
           robocopy "$releaseDir" "$contentsDir" /E /NFL /NDL /NJH /NJS `
             /XF "*.pdb" "*.zip" "acad.err" "GmapsV4_Temp.html" "TEMP01.html"
           if ($LASTEXITCODE -ge 8) { exit $LASTEXITCODE }
@@ -128,12 +123,8 @@ jobs:
           $xml.ApplicationPackage.AppVersion = '${{ steps.version.outputs.VERSION }}'
           $xml.Save((Resolve-Path "$env:BUNDLE_SRC/PackageContents.xml").Path)
 
-      # ── 10. Install WiX Toolset ─────────────────────────────────────
-      - name: Install WiX workload
-        shell: pwsh
-        run: dotnet workload install wix
-
-      # ── 11. Build MSI (harvest + compile + link) ───────────────────
+      # ── 10. Build MSI (harvest + compile + link) ───────────────────
+      #       WiX 5 é distribuído como SDK NuGet — sem necessidade de workload
       - name: Build MSI
         id: build
         shell: pwsh
@@ -142,17 +133,25 @@ jobs:
           $msiName = "CarthoCAD v$version.msi"
 
           dotnet build setup/CarthoCAD_Installer.wixproj `
+            -p:Configuration=Release `
             -p:Version=$version `
             -p:OutputName="CarthoCAD v$version"
 
-          if (-not (Test-Path "setup/$msiName")) {
-            Write-Error "MSI was not created"
+          # WiX 5 coloca o MSI em setup/bin/Release/net9.0/en-US/ (ou similar)
+          $msiPath = Get-ChildItem -Path "setup/bin" -Filter $msiName -Recurse | Select-Object -First 1
+
+          if (-not $msiPath) {
+            Write-Error "MSI nao encontrado: $msiName"
+            Write-Output "Conteudo de setup/bin:"
+            Get-ChildItem "setup/bin" -Recurse | Select-Object FullName
             exit 1
           }
-          Write-Output "MSI created: setup/$msiName"
+
+          Write-Output "MSI encontrado: $($msiPath.FullName)"
+          "MSI_PATH=$($msiPath.FullName)" >> $env:GITHUB_OUTPUT
           "MSI_NAME=$msiName" >> $env:GITHUB_OUTPUT
 
-      # ── 12. Create GitHub Release ──────────────────────────────────
+      # ── 11. Create GitHub Release ──────────────────────────────────
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -164,8 +163,9 @@ jobs:
             **${{ steps.build.outputs.MSI_NAME }}**
 
             Instalador WiX para AutoCAD. Instala em `%APPDATA%\Autodesk\ApplicationPlugins\CarthoCAD.bundle`.
-          files: ${{ steps.build.outputs.MSI_NAME }}
+          files: ${{ steps.build.outputs.MSI_PATH }}
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
