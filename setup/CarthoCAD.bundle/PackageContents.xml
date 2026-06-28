@@ -18,7 +18,7 @@
       OS = "Win32|Win64"
       SupportPath = "./Contents"
       ToolPalettePath = "./Contents/Palettes"
-      SeriesMin="R19.0"
+      SeriesMin="R23.0"
       SeriesMax="R25.1"
       />
     <ComponentEntry

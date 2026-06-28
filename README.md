@@ -100,7 +100,7 @@ Plugin para AutoCAD voltado a topografia, georreferenciamento e mapeamento cadas
 
 ## Dependências
 
-- **AutoCAD 2019** ou superior (mínimo AutoCAD 2015 para a API, mas o plugin requer .NET Framework 4.7.1, suportado a partir do AutoCAD 2019)
+- **AutoCAD 2019** ou superior
 - **.NET Framework 4.7.1** ou superior
 - **Windows 10** ou superior
 - Conexão com internet para ativação da licença, cálculo de declinação magnética e captura de imagens do Google Maps
