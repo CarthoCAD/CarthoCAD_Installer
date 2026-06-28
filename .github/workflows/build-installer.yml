@@ -116,6 +116,19 @@ jobs:
           Write-Output "Build outputs copied to bundle Contents"
           Get-ChildItem "$env:BUNDLE_SRC/Contents" -Recurse | Select-Object FullName
 
+      # ── 8b. Copy WebView2Loader.dll alongside plugin DLL ─────────────
+      - name: Copy WebView2Loader.dll to plugin folder
+        shell: pwsh
+        run: |
+          $contents = "$env:BUNDLE_SRC/Contents"
+          $loader = "$contents\runtimes\win-x64\native\WebView2Loader.dll"
+          if (Test-Path $loader) {
+            Copy-Item -LiteralPath $loader -Destination $contents
+            Write-Output "WebView2Loader.dll copied from runtimes\win-x64\native to Contents"
+          } else {
+            Write-Warning "WebView2Loader.dll not found at expected path: $loader"
+          }
+
       # ── 9. Update PackageContents.xml version ──────────────────────
       - name: Update AppVersion in PackageContents.xml
         shell: pwsh
